@@ -59,6 +59,10 @@ Command line args:
                 command line option or it is assumed to be a default 
                 (256,256,51)
 
+    --axes    : Adds X, Y and Z axes
+
+    --colorbar: Adds a colour scale for the magnatic field strenght
+
     --hslice  : Whether or not to show a semi-tranparent horizontal slice 
                 showing the B-field intensity
 
@@ -102,6 +106,7 @@ def check_mask_points(a):
     except ValueError:
         print "Error: Invalid value in mask_points argument"
         sys.exit(-1)
+        print n
         
     return n
 
@@ -118,13 +123,15 @@ def check_scale_factor(a):
     
 
 
-options = ["shape=","hslice","vslice","mask_points=","scale_factor=","help"]
+options = ["shape=","hslice","vslice","colorbar","axes","mask_points=","scale_factor=","help"]
 
 # Default
 
 shape = [256,256,51,3]
 hslice = False
 vslice = False
+colorbar = False
+axes = False
 mask_points = 100
 scale_factor = 3
 
@@ -135,12 +142,13 @@ if len(sys.argv)<2:
     usage()
     sys.exit(-1)
 
+bfile = sys.argv[1]
+    
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"h",options)
+    opts, args = getopt.getopt(sys.argv[2:],"h",options)
 except getopt.GetoptError as err:
     print str(err)
     sys.exit(-1)
-
 
 # Check if help is required
 for o, a in opts:
@@ -148,7 +156,6 @@ for o, a in opts:
         usage()
         sys.exit(0)
     
-bfile = args[0]
 
 # Try openning it
 try:
@@ -159,7 +166,6 @@ except IOError:
 
 nelem = len(data)
     
-    
 for o, a in opts:
     if o == "--shape":
         shape = check_shape(a,nelem)
@@ -167,7 +173,12 @@ for o, a in opts:
         hslice = True
     elif o=="--vslice":
         vslice = True
+    elif o=="--colorbar":
+        colorbar = True
+    elif o=="--axes":
+        axes = True
     elif o=="--mask_points":
+        print a
         mask_points = check_mask_points(a)
     elif o=="--scale_factor":
         scale_factor = check_scale_factor(a)
@@ -190,5 +201,12 @@ if hslice:
     mlab.imshow(amp,opacity=0.6,reset_zoom=False)
 
 mlab.quiver3d(data[:,:,:,0],data[:,:,:,1],data[:,:,:,2],mask_points=mask_points,scale_factor=scale_factor,extent=[-dx,dx,-dy,dy,-dz,dz])
+
+if axes:
+    mlab.axes()
+
+if colorbar:
+    mlab.vectorbar()
+
 
 mlab.show()
