@@ -27,7 +27,7 @@ $ pip install mayavi
 
 Command line args:
 
-    filename  : The B-field file is just a long stream of binary double 
+    filename   : The B-field file is just a long stream of binary double 
                 precision numbers with no formatting 
 
     --shape=nx,ny,nz :  
@@ -36,13 +36,17 @@ Command line args:
                 command line option or it is assumed to be a default 
                 (256,256,51)
 
-    --hslice  : Whether or not to show a semi-tranparent horizontal slice 
+    --hslice   : Whether or not to show a semi-tranparent horizontal slice 
                 showing the B-field intensity
 
     --mask_points=100 :
 
-                Too many points to show at once, so thin by <mask_points> factor
+                How many points to show at once, so thin by <mask_points> factor
                 default of 100 seems to work best
+                
+    --axes     : Shows x, y and z axes with the extent in terms of cells.
+    
+    --colorbar : Shows the colour scale for the B-field magnitude (in μG)
 
-    scale_factor=3 : Scale size to apply to arrows. Default=3
+    --scale_factor=3 : Scale size to apply to arrows. Default=3
  
